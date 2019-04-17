@@ -1,6 +1,5 @@
 const fs = require('fs');
-const mkdirp = require('mkdirp');
-const download = require('download-file');
+const https = require('https');
 
 const project_folder = 'project';
 const scaffold_type = process.argv[2];
@@ -16,46 +15,39 @@ const scaffoldProject = () => {
     const libraries = config.scaffolds[scaffold_type].libraries;
 
     if (!fs.existsSync(project_folder)) {
-      mkdirp(project_folder, err => {
-        for (const folder in folders) {
-          let folder_path = project_folder;
+      fs.mkdirSync(project_folder);
 
-          if (folder !== '/') {
-            folder_path += '/' + folder;
-            mkdirp(folder_path);
-          }
+      for (const folder in folders) {
+        let folder_path = project_folder;
 
-          for (const file in folders[folder]) {
-            fs.writeFile(`${folder_path}/${file}.${folders[folder][file].type}`, folders[folder][file].content, () => {
-            });
-          }
+        if (folder !== '/') {
+          folder_path += '/' + folder;
+          fs.mkdirSync(folder_path);
         }
 
-        if (libraries && libraries.length > 0) {
-          const libraries_folder = project_folder + '/libraries';
+        for (const file in folders[folder]) {
+          fs.writeFileSync(`${folder_path}/${file}.${folders[folder][file].type}`, folders[folder][file].content);
+        }
+      }
 
-          mkdirp(libraries_folder, err => {
-            for (const library of libraries) {
-              const library_folder = libraries_folder + '/' + library.replace(/^@/g, '');
+      if (libraries && libraries.length > 0) {
+        const libraries_folder = project_folder + '/libraries';
+        fs.mkdirSync(libraries_folder);
 
-              if (config.libraries.hasOwnProperty(library)) {
-                mkdirp(library_folder, err => {
+        for (const library of libraries) {
+          const library_folder = libraries_folder + '/' + library.replace(/^@/g, '');
 
-                  for (const file in config.libraries[library]) {
-                    const url = config.libraries[library][file];
-                    const options = {
-                      directory: './' + library_folder,
-                      filename: file,
-                    };
-                    download(url, options, err => {
-                    });
-                  }
-                });
-              }
+          if (config.libraries.hasOwnProperty(library)) {
+            fs.mkdirSync(library_folder);
+
+            for (const file in config.libraries[library]) {
+              https.get(config.libraries[library][file], response => {
+                response.pipe(fs.createWriteStream(library_folder + '/' + file));
+              });
             }
-          });
+          }
         }
-      });
+      }
     }
     else {
       console.log(`Folder ${project_folder} already exists!`);

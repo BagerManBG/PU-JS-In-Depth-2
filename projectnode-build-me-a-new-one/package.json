@@ -7,10 +7,5 @@
     "scaffold": "node init.js"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "download-file": "^0.1.5",
-    "fs": "0.0.1-security",
-    "mkdirp": "^0.5.1"
-  }
+  "license": "ISC"
 }
