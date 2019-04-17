@@ -1,0 +1,1 @@
+require('./scaffolder/script').scaffoldProject();

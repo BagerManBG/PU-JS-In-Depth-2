@@ -1,0 +1,47 @@
+{
+  "simple_web_project": {
+    "folders": {
+      "/": {
+        "index": {
+          "type": "html",
+          "content": "<html>\n  <head>\n    <title>Scaffolded Index</title>\n    <meta charset=\"utf-8\">\n    <link rel=\"stylesheet\" href=\"css/style.css\">\n  </head>\n  <body>\n    <p>Scaffolded Index</p>\n    <script src=\"js/script.js\"></script>\n  </body>\n</html>"
+        }
+      },
+      "js": {
+        "script": {
+          "type": "js",
+          "content": ""
+        }
+      },
+      "css": {
+        "style": {
+          "type": "css",
+          "content": ""
+        }
+      }
+    }
+  },
+  "bootstrap_web_project": {
+    "folders": {
+      "/": {
+        "index": {
+          "type": "html",
+          "content": "<html>\n  <head>\n    <title>Scaffolded Index</title>\n    <meta charset=\"utf-8\">\n    <link rel=\"stylesheet\" href=\"libraries/bootstrap/bootstrap.css\">\n    <link rel=\"stylesheet\" href=\"css/style.css\">\n  </head>\n  <body>\n    <p>Scaffolded Index</p>\n    <script src=\"libraries/jquery/jquery.js\"></script>\n    <script src=\"libraries/bootstrap/popper.js\"></script>\n    <script src=\"libraries/bootstrap/bootstrap.js\"></script>\n    <script src=\"js/script.js\"></script>\n  </body>\n</html>"
+        }
+      },
+      "js": {
+        "script": {
+          "type": "js",
+          "content": ""
+        }
+      },
+      "css": {
+        "style": {
+          "type": "css",
+          "content": ""
+        }
+      }
+    },
+    "libraries": ["@bootstrap", "@jquery"]
+  }
+}
