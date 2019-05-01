@@ -1,0 +1,11 @@
+{
+  "name": "scaffolder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "init.js",
+  "scripts": {
+    "scaffold": "node init.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
