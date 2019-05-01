@@ -1,0 +1,25 @@
+{% extends 'page.tpl.html' %}
+
+{% block title %} {{ page_title }} {% endblock %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <h1>{{ page_h1 }}</h1>
+  <p>On this page you can see all tables and orders for them.</p>
+</div>
+
+<div class="container">
+  <div class="menu mt-5">
+    <h2>Tables</h2>
+    <ul class="tables">
+      {% for table in tables %}
+        <li>
+          <h3>Table #{{ table.id }} for {{ table.places }} people</h3>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

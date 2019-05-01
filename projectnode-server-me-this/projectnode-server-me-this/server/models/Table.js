@@ -5,13 +5,15 @@ const app_dir = path.dirname(require.main.filename);
 
 class Table {
 
-  constructor (places = 1, uuid = uuidv1()) {
+  constructor (id, places = 1, uuid = uuidv1()) {
     this.uuid = uuid;
+    this.id = id;
     this.places = places;
+    this.orders = [];
   }
 
-  static create (places) {
-    return new Table(places);
+  static create (id, places) {
+    return new Table(id, places);
   }
 
   static load (uuid) {
@@ -19,9 +21,10 @@ class Table {
 
     for (const index in tables) {
       if (tables[index].uuid === uuid) {
-        const table = this.create();
+        const table = this.create(tables[index].id);
 
         table.places = tables[index].places;
+        table.orders = tables[index].orders;
         table.uuid = uuid;
 
         return table;
@@ -33,6 +36,17 @@ class Table {
 
   static loadAllObject () {
     return JSON.parse(fs.readFileSync(app_dir + '/database/tables.json', 'utf8'));
+  }
+
+  static loadAll () {
+    const all = this.loadAllObject();
+    const result = [];
+
+    for (const index in all) {
+      result.push(all[index]);
+    }
+
+    return result;
   }
 
   save () {
@@ -57,7 +71,9 @@ class Table {
   toSimpleObject () {
     return {
       uuid: this.uuid,
+      id: this.id,
       places: this.places,
+      orders: this.orders,
     };
   }
 }
