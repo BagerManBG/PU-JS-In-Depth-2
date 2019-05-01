@@ -1,8 +1,18 @@
 {
-  "tables": {
-    "2": 8,
-    "4": 6,
-    "8": 5,
-    "12": 1
+  "Type A": {
+    "places": 2,
+    "count": 8
+  },
+  "Type B": {
+    "places": 4,
+    "count": 6
+  },
+  "Type C": {
+    "places": 8,
+    "count": 5
+  },
+  "Type D": {
+    "places": 12,
+    "count": 1
   }
 }
