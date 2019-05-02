@@ -2,94 +2,54 @@
 
 {% block title %} {{ page_title }} {% endblock %}
 
-{% block content %}
+{% block header %}
 
-<div class="jumbotron">
+<div class="jumbotron mb-0">
   <h1>{{ page_h1 }}</h1>
   <p>On this page you can manage orders.</p>
 </div>
 
+{% endblock %}
+
+{% block content %}
+
 <div class="container">
   <div class="forms d-flex justify-content-between">
     <div class="form pr-5 w-50">
-      <form action="/menu/add" method="post">
+      <h3>Add Order</h3>
+      <form action="/orders/add" method="post">
         <input type="hidden" name="redirect" value="{{ current_path }}">
 
         <div class="form-group">
-          <label for="category">Menu Category:</label>
-          <select class="form-control" name="category" id="category">
-            <option value="soup">Soup</option>
-            <option value="starter">Started</option>
-            <option value="main">Main Coarse</option>
-            <option value="dessert">Dessert</option>
-            <option value="drink">Drink</option>
+          <label for="table">Table:</label>
+          <select class="form-control" name="table" id="table">
+            {% for table in tables %}
+              <option value="{{ table.uuid }}">Table #{{ table.id }}</option>
+            {% endfor %}
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="name">Product Name:</label>
-          <input type="text" name="name" class="form-control" id="name">
-        </div>
-
-        <div class="form-group">
-          <label for="price">Price:</label>
-          <input type="number" name="price" value="0.01" min="0.01" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" id="price">
-        </div>
-
-        <div class="form-group form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" name="active" type="checkbox" checked> Active
-          </label>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
-    <div class="form pl-5 w-50">
-      <form action="/menu/add" method="post">
-        <input type="hidden" name="redirect" value="{{ current_path }}">
-
-        <div class="form-group">
-          <label for="category">Menu Category:</label>
-          <select class="form-control" name="category" id="category">
-            <option value="soup">Soup</option>
-            <option value="starter">Started</option>
-            <option value="main">Main Coarse</option>
-            <option value="dessert">Dessert</option>
-            <option value="drink">Drink</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="name">Product Name:</label>
-          <input type="text" name="name" class="form-control" id="name">
-        </div>
-
-        <div class="form-group">
-          <label for="price">Price:</label>
-          <input type="number" name="price" value="0.01" min="0.01" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" id="price">
-        </div>
-
-        <div class="form-group form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" name="active" type="checkbox" checked> Active
-          </label>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Create</button>
       </form>
     </div>
   </div>
-  <!--<div class="menu mt-5">-->
-    <!--<h2>Tables</h2>-->
-    <!--<ul class="tables">-->
-      <!--{% for table in tables %}-->
-        <!--<li>-->
-          <!--<h3>Table #{{ table.id }} for {{ table.places }} people</h3>-->
-        <!--</li>-->
-      <!--{% endfor %}-->
-    <!--</ul>-->
-  <!--</div>-->
+  <div class="menu mt-5">
+    <h2>Orders</h2>
+    <ul class="tables">
+      {% for order in orders %}
+        <li>
+          <div class="d-flex">
+            <h3>Order {{ order.uuid }} for table #{{ order.table.id }}. Status: "{{ order.status }}".</h3>
+            <div>
+              <a href="/orders/{{ order.uuid }}">
+                <button type="submit" class="btn btn-sm btn-primary ml-3">View</button>
+              </a>
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>
 
 {% endblock %}

@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const app_dir = path.dirname(require.main.filename);
 
+const Table = require(app_dir + '/server/models/Table');
+
 class Order {
 
   constructor (table, uuid = uuidv1()) {
@@ -24,6 +26,7 @@ class Order {
         const order = this.create(orders[index].table);
 
         order.items = orders[index].items;
+        order.table = orders[index].table;
         order.status = orders[index].status;
         order.uuid = uuid;
 
@@ -35,7 +38,7 @@ class Order {
   }
 
   static loadAllObject () {
-    return JSON.parse(fs.readFileSync(app_dir + '/database/tables.json', 'utf8'));
+    return JSON.parse(fs.readFileSync(app_dir + '/database/orders.json', 'utf8'));
   }
 
   static loadAll () {
@@ -50,7 +53,7 @@ class Order {
   }
 
   save () {
-    const file_path = app_dir + '/database/tables.json';
+    const file_path = app_dir + '/database/orders.json';
     const orders = JSON.parse(fs.readFileSync(file_path, 'utf8'));
     let i = 0;
 
@@ -71,7 +74,8 @@ class Order {
   toSimpleObject () {
     return {
       uuid: this.uuid,
-      id: this.table,
+      id: this.id,
+      table: this.table,
       items: this.items,
       status: this.status,
     };

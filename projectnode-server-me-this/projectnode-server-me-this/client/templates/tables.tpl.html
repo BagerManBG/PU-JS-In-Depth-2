@@ -2,12 +2,16 @@
 
 {% block title %} {{ page_title }} {% endblock %}
 
-{% block content %}
+{% block header %}
 
-<div class="jumbotron">
+<div class="jumbotron mb-0">
   <h1>{{ page_h1 }}</h1>
   <p>On this page you can see all tables and orders for them.</p>
 </div>
+
+{% endblock %}
+
+{% block content %}
 
 <div class="container">
   <div class="menu mt-5">
@@ -15,7 +19,12 @@
     <ul class="tables">
       {% for table in tables %}
         <li>
-          <h3>Table #{{ table.id }} for {{ table.places }} people</h3>
+          <h3>Table #{{ table.id }} for {{ table.places }} people.</h3>
+          <ul>
+            {% for order in table.orders %}
+              <li><p>Order {{ order.uuid }}. Status: "{{ order.status }}".</p></li>
+            {% endfor %}
+          </ul>
         </li>
       {% endfor %}
     </ul>

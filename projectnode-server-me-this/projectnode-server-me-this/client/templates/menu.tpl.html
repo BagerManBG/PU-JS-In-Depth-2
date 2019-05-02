@@ -2,12 +2,16 @@
 
 {% block title %} {{ page_title }} {% endblock %}
 
-{% block content %}
+{% block header %}
 
-<div class="jumbotron">
+<div class="jumbotron mb-0">
   <h1>{{ page_h1 }}</h1>
   <p>On this page you can manage the menu.</p>
 </div>
+
+{% endblock %}
+
+{% block content %}
 
 <div class="container">
   <div class="add-item-form">

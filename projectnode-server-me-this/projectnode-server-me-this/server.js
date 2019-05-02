@@ -19,10 +19,13 @@ const route_orders = require(app_dir + '/server/routes/orders');
 
 // GET
 app.get('/', route_tables.get);
-app.get('/orders', route_orders.get);
+app.get('/orders', route_orders.getAll);
+app.get('/orders/:uuid', route_orders.getSingle);
 app.get('/menu', route_menu.get);
 
 // POST
+app.post('/orders/add', route_orders.post);
+app.post('/orders/update', route_orders.update);
 app.post('/menu/add', route_menu.post);
 app.post('/menu/update/active', route_menu.update);
 
