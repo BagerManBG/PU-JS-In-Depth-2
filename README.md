@@ -16,3 +16,7 @@ Only required thing is node with npm and a terminal.
 
 You can run the scaffolding script with "node init $TYPE", where $TYPE is the type of the project you want to scaffold.
 There are two project types (__simple_web_project__ and __bootstrap_web_project__).
+
+## Information for Task #2 (_projectnode-server-me-this_)
+
+Except the front page, other available pages are /menu and /orders.
