@@ -15,10 +15,10 @@ class DriverOurSQL {
     this.db_dir = app_dir + '/database/';
 
     // Regex definitions.
-    const regex_operations_create_delete = /^(?<type>operation):\[(?<table>[a-z]+)\] (?<command>establish communism|send to gulag);$/;
-    const regex_query_select_delete = /^(?<type>query):\[(?<table>[a-z]+)\] ((?<command>report|send to gulag) (?<target>all|([a-zA-Z0-9\-]+,?\s?)+));$/;
-    const regex_query_update = /^(?<type>query):\[(?<table>[a-z]+)\] ((?<command>reinforce) (?<target>[a-zA-Z0-9\-]+)) <json>(?<json_data>.+)<\/json>;$/;
-    const regex_query_create = /^(?<type>query):\[(?<table>[a-z]+)\] (?<command>establish unit) <json>(?<json_data>.+)<\/json>;$/;
+    const regex_operations_create_delete = /^(?<type>operation|OPERATION):\[(?<table>[a-z][a-z0-9_]+)\] (?<command>establish communism|ESTABLISH COMMUNISM|send to gulag|SEND TO GULAG);$/;
+    const regex_query_select_delete = /^(?<type>query|QUERY):\[(?<table>[a-z][a-z0-9_]+)\] ((?<command>report|REPORT|send to gulag|SEND TO GULAG) (?<target>all|ALL|([a-zA-Z0-9\-]+,?\s?)+));$/;
+    const regex_query_update = /^(?<type>query|QUERY):\[(?<table>[a-z][a-z0-9_]+)\] ((?<command>reinforce|REINFORCE) (?<target>[a-zA-Z0-9\-]+)) <json>(?<json_data>.+)<\/json>;$/;
+    const regex_query_create = /^(?<type>query|QUERY):\[(?<table>[a-z][a-z0-9_]+)\] (?<command>establish unit|ESTABLISH UNIT) <json>(?<json_data>.+)<\/json>;$/;
 
     this.syntaxRegEx = [
       regex_operations_create_delete,
@@ -48,6 +48,9 @@ class DriverOurSQL {
     for (const regex of this.syntaxRegEx) {
       if (regex.test(query)) {
         const data = regex.exec(query).groups;
+
+        data.type = data.type.toLowerCase();
+        data.command = data.command.toLowerCase();
 
         // Handles Operation Commands.
         if (data.type === 'operation') {
@@ -112,7 +115,7 @@ class DriverOurSQL {
             }
             // Handles Records Read.
             else if (data.command === 'report') {
-              if (data.target === 'all') {
+              if (data.target === 'all' || data.target === 'ALL') {
                 return {
                   status: 'success',
                   body: `Fetched all records from "${data.table}".`,
@@ -169,7 +172,7 @@ class DriverOurSQL {
             }
             // Handles Records Delete.
             else if (data.command === 'send to gulag') {
-              if (data.target === 'all') {
+              if (data.target === 'all' || data.target === 'ALL') {
                 fs.unlinkSync(this.db_dir + data.table + '.json');
                 fs.writeFileSync(this.db_dir + data.table + '.json', '{}');
                 return {
