@@ -1,0 +1,49 @@
+{% extends 'page.tpl.html' %}
+
+{% block title %} {{ page_title }} {% endblock %}
+
+{% block header %}
+
+<div class="jumbotron mb-0">
+  <h1>{{ page_h1 }}</h1>
+  <p>There's no more mySQL, now it is "OurSQL". Here you can try OurSQL.</p>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="query-form mt-5">
+    <h3>Query</h3>
+    <form action="/" method="post">
+      <input type="hidden" name="redirect" value="{{ current_path }}">
+
+      <div class="form-group">
+        <textarea name="query" id="query" cols="100" rows="5"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Execute</button>
+    </form>
+  </div>
+  <div class="query-result mt-5">
+    {% if query %}
+      <div class="query">
+        <p><b>Query</b>: {{ query }}</p>
+      </div>
+    {% endif %}
+    {% if message %}
+      <div class="message">
+        <p><b>Status</b>: {{ message.status }}</p>
+        <p><b>Message</b>: {{ message.body }}</p>
+      </div>
+    {% endif %}
+    {% if records %}
+      <div class="records">
+        <pre>{{ records }}</pre>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
