@@ -3,9 +3,15 @@ const path = require('path');
 const fs = require('fs');
 const app_dir = path.dirname(require.main.filename);
 
+/**
+ * DriverOurSQL class.
+ * This is the database driver class, which handles the queries.
+ */
 class DriverOurSQL {
+  /**
+   * DriverOurSQL constructor.
+   */
   constructor () {
-    this.tables = [];
     this.db_dir = app_dir + '/database/';
 
     // Regex definitions.
@@ -22,16 +28,30 @@ class DriverOurSQL {
     ];
   }
 
+  /**
+   * @returns {DriverOurSQL}
+   *
+   * Creates a new instance of the class.
+   */
   static create () {
     return new DriverOurSQL();
   }
 
+  /**
+   * @param query
+   * @returns {*}
+   *
+   * Executes the query and returns a result object for indication
+   * of either success or error.
+   */
   execute (query) {
     for (const regex of this.syntaxRegEx) {
       if (regex.test(query)) {
         const data = regex.exec(query).groups;
 
+        // Handles Operation Commands.
         if (data.type === 'operation') {
+          // Handles Table Creation.
           if (data.command === 'establish communism') {
             if (!fs.existsSync(this.db_dir + data.table + '.json')) {
               fs.writeFileSync(this.db_dir + data.table + '.json', '{}');
@@ -47,6 +67,7 @@ class DriverOurSQL {
               };
             }
           }
+          // Handles Table Deletion.
           else if (data.command === 'send to gulag') {
             if (fs.existsSync(this.db_dir + data.table + '.json')) {
               fs.unlinkSync(this.db_dir + data.table + '.json');
@@ -63,11 +84,14 @@ class DriverOurSQL {
             }
           }
         }
+        // Handles Query Commands.
         else if (data.type === 'query') {
+          // Check if selected table exists.
           if (fs.existsSync(this.db_dir + data.table + '.json')) {
             let json_data;
             const table_data = JSON.parse(fs.readFileSync(this.db_dir + data.table + '.json'));
 
+            // Handles Records Create.
             if (data.command === 'establish unit') {
               try {
                 json_data = JSON.parse(data.json_data);
@@ -86,35 +110,7 @@ class DriverOurSQL {
                 body: `Added record to table ${data.table}.`,
               };
             }
-            else if (data.command === 'send to gulag') {
-              if (data.target === 'all') {
-                fs.unlinkSync(this.db_dir + data.table + '.json');
-                fs.writeFileSync(this.db_dir + data.table + '.json', '{}');
-                return {
-                  status: 'success',
-                  body: `Removed all records from "${data.table}".`,
-                };
-              }
-              else {
-                data.target = data.target.replace(', ', ',');
-                const data_target_array = data.target.split(',');
-                let counter = 0;
-
-                for (const target of data_target_array) {
-                  if (table_data.hasOwnProperty(target)) {
-                    delete table_data[target];
-                    counter++;
-                  }
-                }
-
-                fs.writeFileSync(this.db_dir + data.table + '.json', JSON.stringify(table_data));
-
-                return {
-                  status: 'success',
-                  body: `Removed ${counter} records from "${data.table}".`,
-                };
-              }
-            }
+            // Handles Records Read.
             else if (data.command === 'report') {
               if (data.target === 'all') {
                 return {
@@ -143,6 +139,7 @@ class DriverOurSQL {
                 };
               }
             }
+            // Handles Records Update.
             else if (data.command === 'reinforce') {
               try {
                 json_data = JSON.parse(data.json_data);
@@ -169,6 +166,36 @@ class DriverOurSQL {
                 status: 'success',
                 body: `Updated record in table ${data.table}.`,
               };
+            }
+            // Handles Records Delete.
+            else if (data.command === 'send to gulag') {
+              if (data.target === 'all') {
+                fs.unlinkSync(this.db_dir + data.table + '.json');
+                fs.writeFileSync(this.db_dir + data.table + '.json', '{}');
+                return {
+                  status: 'success',
+                  body: `Removed all records from "${data.table}".`,
+                };
+              }
+              else {
+                data.target = data.target.replace(', ', ',');
+                const data_target_array = data.target.split(',');
+                let counter = 0;
+
+                for (const target of data_target_array) {
+                  if (table_data.hasOwnProperty(target)) {
+                    delete table_data[target];
+                    counter++;
+                  }
+                }
+
+                fs.writeFileSync(this.db_dir + data.table + '.json', JSON.stringify(table_data));
+
+                return {
+                  status: 'success',
+                  body: `Removed ${counter} records from "${data.table}".`,
+                };
+              }
             }
           }
           else {
